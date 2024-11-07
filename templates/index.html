@@ -1,0 +1,24 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram To Mealie Importer</title>
+</head>
+<body>
+<h1>Download Instagram Post/Reel</h1>
+{% if error %}
+<p style="color: red;">{{ error }}</p>
+{% endif %}
+<form method="POST">
+    <label for="url">Instagram URL:</label>
+    <input type="text" name="url" id="url" required>
+    <button type="submit">Import into Mealie</button>
+</form>
+
+{% if successful %}
+<p style="color: green;">Video successfully imported to Mealie</p>
+{% endif %}
+</body>
+</html>

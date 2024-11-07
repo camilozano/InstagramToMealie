@@ -1,0 +1,15 @@
+version: '3'
+services:
+  InstagramToMealie:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: instagramtomealie:latest
+    ports:
+      - "9002:9001"
+    environment:
+      INSTA_USER: "instagram username"
+      MEALIE_API_KEY: "MEALIE API KEY"
+      MEALIE_URL: "YOU LOCAL MEALIE INSTALLATION"
+    volumes:
+      - "./session-file:/app/session-file"
