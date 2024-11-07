@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     image: instagramtomealie:latest
     ports:
-      - "9002:9001"
+      - "9001:9001"
     environment:
       INSTA_USER: "instagram username"
       MEALIE_API_KEY: "MEALIE API KEY"
