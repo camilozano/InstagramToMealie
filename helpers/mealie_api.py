@@ -1,3 +1,5 @@
+import os
+
 import requests
 
 
@@ -52,7 +54,7 @@ class MealieAPI:
             f"{self.MEALIE_URL}/api/recipes/create/html-or-json",
             json=recipe_data,
             headers=self.HEADERS,
-            timeout=300
+            timeout=int(os.environ.get("MEALIE_OPENAI_REQUEST_TIMEOUT") or 60)
         )
 
         if response.status_code == 201:

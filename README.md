@@ -96,6 +96,7 @@ services:
       INSTA_USER: "instagram username"
       MEALIE_API_KEY: "MEALIE API KEY"
       MEALIE_URL: "YOU LOCAL MEALIE INSTALLATION"
+      MEALIE_OPENAI_REQUEST_TIMEOUT: 60
     volumes:
       - "./session-file:/app/session-file"        #The instagram session file you created in the prerequisits
     depends_on:

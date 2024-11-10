@@ -6,7 +6,35 @@ from helpers.mealie_api import MealieAPI
 
 from flask import Flask, request, render_template
 
-print(os.environ.get("MEALIE_URL"))
+if "MEALIE_URL" in os.environ:
+    print(os.environ.get("MEALIE_URL"))
+else:
+    print("You're MEALIE_URL ENV Variable is not set")
+    exit(1)
+
+if "MEALIE_API_KEY" in os.environ:
+    print("Mealie API Key is set in ENV")
+else:
+    print("You're MEALIE_API_KEY ENV Variable is not set")
+    exit(1)
+
+if "INSTA_USER" in os.environ:
+    print("INSTA_USER is set in ENV")
+else:
+    print("You're INSTA_USER ENV Variable is not set")
+    exit(1)
+
+if os.path.isfile("./session-file"):
+    print("Session file exists")
+else:
+    print("Session file does not exist")
+    exit(1)
+
+if "MEALIE_OPENAI_REQUEST_TIMEOUT" in os.environ:
+    print(os.environ.get("MEALIE_OPENAI_REQUEST_TIMEOUT"))
+else:
+    print("You're MEALIE_OPENAI_REQUEST_TIMEOUT ENV Variable is not set - using default of 60")
+
 mealie_api = MealieAPI(os.environ.get("MEALIE_URL"), os.environ.get("MEALIE_API_KEY"))
 downloader = InstaDownloader()
 print("Startup Successfully")

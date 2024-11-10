@@ -11,5 +11,6 @@ services:
       INSTA_USER: "instagram username"
       MEALIE_API_KEY: "MEALIE API KEY"
       MEALIE_URL: "YOU LOCAL MEALIE INSTALLATION"
+      MEALIE_OPENAI_REQUEST_TIMEOUT: 360
     volumes:
       - "./session-file:/app/session-file"
