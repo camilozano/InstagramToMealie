@@ -27,8 +27,15 @@ else:
 if os.path.isfile("./session-file"):
     print("Session file exists")
 else:
-    print("Session file does not exist")
-    exit(1)
+    if "INSTA_PWD" in os.environ:
+        if "INSTA_TOTP_SECRET" in os.environ:
+            print("Insta PWD and TOTP SECRET are set in ENV - trying to login but will possibly fail")
+        else:
+            print(
+                "Insta PWD is set but TOTP SECRET is not set - continue but will fail if 2FA is configured for instagram account")
+    else:
+        print("Neither session-file nor Insta PWD is configured - recomending session file")
+        exit(1)
 
 if "MEALIE_OPENAI_REQUEST_TIMEOUT" in os.environ:
     print(os.environ.get("MEALIE_OPENAI_REQUEST_TIMEOUT"))

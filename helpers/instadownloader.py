@@ -2,7 +2,7 @@ import os
 import re
 import instaloader
 import pyotp
-from instaloader import Post, TwoFactorAuthRequiredException
+from instaloader import Post, TwoFactorAuthRequiredException, BadCredentialsException
 
 
 class InstaDownloader:
@@ -13,11 +13,18 @@ class InstaDownloader:
                                               dirname_pattern="downloads/{target}", )
         try:
             user = os.environ.get('INSTA_USER')
-            # self.loader.login(os.environ.get("INSTA_USER"), os.environ.get("INSTA_PWD"))
-            self.loader.load_session_from_file(user, "./session-file")
-        except TwoFactorAuthRequiredException:
+            if os.path.isfile("./session-file"):
+                self.loader.load_session_from_file(user, "./session-file")
+            else:
+                self.loader.login(os.environ.get("INSTA_USER"), os.environ.get("INSTA_PWD"))
+        except TwoFactorAuthRequiredException:  # Probably not going to work https://github.com/instaloader/instaloader/issues/1217
+            print(os.environ.get("INSTA_TOTP_SECRET"))
             totp = pyotp.TOTP(os.environ.get("INSTA_TOTP_SECRET"))
-            self.loader.two_factor_login(totp.now())
+            print(totp.now())
+            try:
+                self.loader.two_factor_login(totp.now())
+            except BadCredentialsException:
+                self.loader.two_factor_login(totp.now())
 
         print(self.loader.test_login())
 
