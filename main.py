@@ -49,30 +49,39 @@ print("Startup Successfully")
 app = Flask(__name__)
 
 
+def execute_download(url):
+    post = downloader.download_instagram_post(url)
+    filepath = "downloads/" + post.shortcode + "/"
+    caption_file = filepath + post.date.strftime(format="%Y-%m-%d_%H-%M-%S_UTC") + ".txt"
+
+    try:
+        recipe_slug = mealie_api.create_recipe_from_html(post.caption)
+
+        mealie_api.update_recipe_orig_url(recipe_slug, url)
+        image_file = filepath + post.date.strftime(format="%Y-%m-%d_%H-%M-%S_UTC") + ".jpg"
+        mealie_api.upload_recipe_image(recipe_slug, image_file)
+        if post.is_video:
+            video_file = filepath + post.date.strftime(format="%Y-%m-%d_%H-%M-%S_UTC") + ".mp4"
+            mealie_api.upload_recipe_asset(recipe_slug, video_file)
+
+        shutil.rmtree(filepath)
+
+        return render_template("index.html", successful="true")
+
+    except Exception as e:
+        shutil.rmtree(filepath)
+        return repr(e)
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         url = request.form.get("url")
-        post = downloader.download_instagram_post(url)
-        filepath = "downloads/" + post.shortcode + "/"
-        caption_file = filepath + post.date.strftime(format="%Y-%m-%d_%H-%M-%S_UTC") + ".txt"
+        return execute_download(url)
 
-        try:
-            recipe_slug = mealie_api.create_recipe_from_html(post.caption)
-
-            mealie_api.update_recipe_orig_url(recipe_slug, url)
-            image_file = filepath + post.date.strftime(format="%Y-%m-%d_%H-%M-%S_UTC") + ".jpg"
-            mealie_api.upload_recipe_image(recipe_slug, image_file)
-            if post.is_video:
-                video_file = filepath + post.date.strftime(format="%Y-%m-%d_%H-%M-%S_UTC") + ".mp4"
-                mealie_api.upload_recipe_asset(recipe_slug, video_file)
-
-            return render_template("index.html", successful="true")
-
-        except Exception as e:
-            return repr(e)
-
-        shutil.rmtree(filepath)
+    elif request.args.get('url') is not None and request.args.get('url') != "":
+        url = request.args.get('url')
+        return execute_download(url)
 
     return render_template("index.html")
 

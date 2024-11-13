@@ -82,8 +82,6 @@ Install InstagramToMealie using one of the following methods:
 
 **Use the Provided Docker Image: https://hub.docker.com/repository/docker/jotec2002/instagramtomealie/general**
 
-### Usage
-
 Deploy it via docker-compose allongside your mealie installation
 
 Docker compose example (With Instagram Session File):
@@ -130,6 +128,11 @@ services:
       MEALIE_OPENAI_REQUEST_TIMEOUT: 60 #optional default 60
       INSTA_PWD: "Cleartext Instagram Password"
 ````
+
+### Usage
+
+1. Open in Webbrowser (e.g. instagramtomealie.my-server.com) and just import the Instagram URL into the Textfield
+2. Call from an Automation (e.g. IOS shortcut) the url instagramtomealie.my-server.com?url=<InstagramURL>
 
 ---
 
