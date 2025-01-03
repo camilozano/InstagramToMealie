@@ -32,7 +32,7 @@ class InstaDownloader:
         # Validate and extract shortcode from the URL
         match = re.search(r'(https?://)?(www\.)?instagram\.com/(p|reel|tv)/([A-Za-z0-9_-]+)', url)
         if not match:
-            print("Invalid Instagram URL. Please make sure it is a post, reel, or IGTV URL.")
+            print(f"Received invalid Instagram URL ({url}). Please make sure it is a post, reel, or IGTV URL.")
             return None
 
         shortcode = match.group(4)  # Extract the shortcode from the URL
