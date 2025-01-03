@@ -5,8 +5,8 @@ import requests
 
 class MealieAPI:
     def __init__(self, url, key):
-        self.MEALIE_URL = url  # Basis-URL für Mealie
-        self.API_KEY = key  # Dein API-Schlüssel
+        self.MEALIE_URL = url
+        self.API_KEY = key
         self.HEADERS = {
             "Authorization": f"Bearer {self.API_KEY}",
         }
@@ -16,10 +16,8 @@ class MealieAPI:
         # Check connection and authentication data
         print(f"\nChecking connection and validating auth data...")
 
-        # Send a GET request to get data
         response = requests.get(f"{self.MEALIE_URL}/api/users/self", headers=self.HEADERS)
 
-        # Print information about the response
         if response.status_code == 200:
             print(f"\nConnection established! Auth data validated! - Status Code: {response.status_code}")
             return True
@@ -34,7 +32,7 @@ class MealieAPI:
             return response.json()
         else:
             raise Exception(
-                f"Error while getting Recipe from API! - Status Code: {response.status_code} - Response: {response.text}")
+                f"Error while getting recipe from API! - Status Code: {response.status_code} - Response: {response.text}")
 
     def __put_recipe(self, recipe_id, data) -> str:
         response = requests.put(f"{self.MEALIE_URL}/api/recipes/{recipe_id}", headers=self.HEADERS, json=data)
@@ -42,7 +40,7 @@ class MealieAPI:
             return response.json()
         else:
             raise Exception(
-                f"Error while getting Recipe from API! - Status Code: {response.status_code} - Response: {response.text}")
+                f"Error while getting recipe from API! - Status Code: {response.status_code} - Response: {response.text}")
 
     def create_recipe_from_html(self, html_content) -> str:
         recipe_data = {
@@ -59,7 +57,7 @@ class MealieAPI:
 
         if response.status_code == 201:
             recipe = response.json()
-            print(f"Rezept erstellt mit ID")
+            print(f"Created recipe with ID: {recipe}")
         else:
             raise Exception(
                 f"Error while getting Recipe from API! - Status Code: {response.status_code} - Response: {response.text}")
@@ -82,7 +80,7 @@ class MealieAPI:
                                 headers=self.HEADERS)
 
         if response.status_code == 200:
-            print(f"Cover Bild Rezept hinzugefügt")
+            print(f"Added cover image")
             return response.json()
         else:
             raise Exception(
@@ -101,7 +99,7 @@ class MealieAPI:
                                  headers=self.HEADERS)
 
         if response.status_code == 200:
-            print(f"Video Asset hinzugefügt")
+            print(f"Added video asset")
             return response.json()
         else:
             raise Exception(
