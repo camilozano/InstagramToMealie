@@ -1,11 +1,12 @@
 FROM python:3.12-slim
 LABEL authors="JoTec2002"
 
-# Install required packages
-RUN pip install flask instaloader pyotp waitress
-
-# Set working directory
 WORKDIR /app
+
+COPY requirements.txt /app/
+
+# Install required packages
+RUN pip install -r requirements.txt
 
 # Copy application code
 COPY main.py /app/

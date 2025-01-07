@@ -7,44 +7,43 @@ from helpers.mealie_api import MealieAPI
 from flask import Flask, request, render_template
 
 if "MEALIE_URL" in os.environ:
-    print(os.environ.get("MEALIE_URL"))
+    print(f"Got Mealie URL: {os.environ.get("MEALIE_URL")} from environment")
 else:
-    print("You're MEALIE_URL ENV Variable is not set")
+    print("Failed to get Mealie URL from environment, make sure MEALIE_URL is set.")
     exit(1)
 
 if "MEALIE_API_KEY" in os.environ:
-    print("Mealie API Key is set in ENV")
+    print("Got Mealie API key from environment")
 else:
-    print("You're MEALIE_API_KEY ENV Variable is not set")
+    print("Failed to get Mealie API key from environment, make sure MEALIE_API_KEY is set.")
     exit(1)
 
 if "INSTA_USER" in os.environ:
-    print("INSTA_USER is set in ENV")
+    print(f"Got Instagram username: {os.environ.get("INSTA_USER")} from environment")
 else:
-    print("You're INSTA_USER ENV Variable is not set")
+    print("Failed to get Instagram username from environment, make sure INSTA_USER is set.")
     exit(1)
 
 if os.path.isfile("./session-file"):
-    print("Session file exists")
+    print("Using the session file at: ./session-file")
 else:
     if "INSTA_PWD" in os.environ:
         if "INSTA_TOTP_SECRET" in os.environ:
-            print("Insta PWD and TOTP SECRET are set in ENV - trying to login but will possibly fail")
+            print("Got Instagram password and TOTP secret from environment. Trying to login without session file but failure is possible. Authenticating via session file is recommended.")
         else:
-            print(
-                "Insta PWD is set but TOTP SECRET is not set - continue but will fail if 2FA is configured for instagram account")
+            print("Instagram password is set but no TOTP secret was found. Set INSTA_TOTP_SECRET if using 2FA, contuining with regular login without 2FA...")
     else:
-        print("Neither session-file nor Insta PWD is configured - recomending session file")
+        print("Failed to get a session file or Instagram password. Provide a valid session file or set INSTA_PWD in environment")
         exit(1)
 
 if "MEALIE_OPENAI_REQUEST_TIMEOUT" in os.environ:
-    print(os.environ.get("MEALIE_OPENAI_REQUEST_TIMEOUT"))
+    print(f"Got OpenAI timeout: {os.environ.get("MEALIE_OPENAI_REQUEST_TIMEOUT")}s from environment")
 else:
-    print("You're MEALIE_OPENAI_REQUEST_TIMEOUT ENV Variable is not set - using default of 60")
+    print("Failed to get OpenAI timeout from environment. Using the default of 60s, if other timeout is desired make sure MEALIE_OPENAI_REQUEST_TIMEOUT is set.")
 
 mealie_api = MealieAPI(os.environ.get("MEALIE_URL"), os.environ.get("MEALIE_API_KEY"))
 downloader = InstaDownloader()
-print("Startup Successfully")
+print("Started succesfully")
 
 app = Flask(__name__)
 
@@ -52,7 +51,6 @@ app = Flask(__name__)
 def execute_download(url):
     post = downloader.download_instagram_post(url)
     filepath = "downloads/" + post.shortcode + "/"
-    caption_file = filepath + post.date.strftime(format="%Y-%m-%d_%H-%M-%S_UTC") + ".txt"
 
     try:
         recipe_slug = mealie_api.create_recipe_from_html(post.caption)
@@ -89,4 +87,6 @@ def index():
 if __name__ == "__main__":
     from waitress import serve
 
-    serve(app, host="0.0.0.0", port=9001)
+    http_port = os.environ.get("HTTP_PORT") or 9001
+
+    serve(app, host="0.0.0.0", port=http_port)
