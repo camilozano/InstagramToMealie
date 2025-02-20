@@ -3,6 +3,8 @@ import shutil
 
 from helpers.instadownloader import InstaDownloader
 from helpers.mealie_api import MealieAPI
+from helpers.video_processor import VideoProcessor
+
 
 from flask import Flask, request, render_template
 
@@ -41,9 +43,14 @@ if "MEALIE_OPENAI_REQUEST_TIMEOUT" in os.environ:
 else:
     print("Failed to get OpenAI timeout from environment. Using the default of 60s, if other timeout is desired make sure MEALIE_OPENAI_REQUEST_TIMEOUT is set.")
 
+if "GEMINI_API_KEY" not in os.environ:
+    print("Failed to get Gemini API key from environment, make sure GEMINI_API_KEY is set.")
+    exit(1)
+
 mealie_api = MealieAPI(os.environ.get("MEALIE_URL"), os.environ.get("MEALIE_API_KEY"))
 downloader = InstaDownloader()
-print("Started succesfully")
+video_processor = VideoProcessor()
+print("Started successfully")
 
 app = Flask(__name__)
 
@@ -51,13 +58,26 @@ app = Flask(__name__)
 def execute_download(url):
     post = downloader.download_instagram_post(url)
     filepath = "downloads/" + post.shortcode + "/"
+    post_date = post.date.strftime(format="%Y-%m-%d_%H-%M-%S_UTC")
+    image_file = filepath + post_date + ".jpg"
 
     try:
-        recipe_slug = mealie_api.create_recipe_from_html(post.caption)
+        # Process video with Gemini if it's a video post
+        if post.is_video:
+            video_file = filepath + post_date + ".mp4"
+            recipe_content = video_processor.process_video(video_file)
+            if not recipe_content:
+                # Fallback to caption if video processing fails
+                print("Video processing failed, falling back to caption")
+                recipe_content = post.caption
+        else:
+            recipe_content = post.caption
+
+        recipe_slug = mealie_api.create_recipe_from_html(recipe_content)
 
         mealie_api.update_recipe_orig_url(recipe_slug, url)
-        image_file = filepath + post.date.strftime(format="%Y-%m-%d_%H-%M-%S_UTC") + ".jpg"
         mealie_api.upload_recipe_image(recipe_slug, image_file)
+        
         if post.is_video:
             video_file = filepath + post.date.strftime(format="%Y-%m-%d_%H-%M-%S_UTC") + ".mp4"
             mealie_api.upload_recipe_asset(recipe_slug, video_file)

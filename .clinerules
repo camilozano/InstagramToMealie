@@ -1,0 +1,54 @@
+# Cline Rules for InstagramToMealie
+
+## Project Patterns
+1. Authentication Handling
+   - Prefer session-based authentication for Instagram
+   - Always require Mealie API key
+   - Support but don't recommend 2FA
+
+2. Configuration Management
+   - Use environment variables for all settings
+   - Maintain Docker-friendly configuration
+   - Provide clear documentation for setup
+
+3. Code Organization
+   - Core logic in main.py
+   - Helper modules in helpers/
+   - Templates in templates/
+   - Memory bank in memory-bank/
+
+## Working Patterns
+1. Documentation Updates
+   - Update memory bank after significant changes
+   - Keep progress.md current
+   - Document known issues promptly
+
+2. File Operations
+   - Use replace_in_file for small changes
+   - Use write_to_file for new files
+   - Keep file paths relative to project root
+
+3. Development Flow
+   - Test with sample Instagram posts
+   - Verify Mealie integration
+   - Check Docker deployment
+   - Update documentation
+
+## Learning Points
+1. Project Structure
+   - Python-based web application
+   - Flask for simplicity
+   - Docker for deployment
+   - Clear separation of concerns
+
+2. Integration Focus
+   - Instagram data extraction
+   - Mealie recipe creation
+   - Media asset handling
+   - Configuration flexibility
+
+3. Documentation Standards
+   - Markdown format
+   - Mermaid diagrams
+   - Clear section organization
+   - Consistent formatting

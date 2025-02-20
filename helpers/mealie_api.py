@@ -16,7 +16,7 @@ class MealieAPI:
         # Check connection and authentication data
         print(f"\nChecking connection and validating auth data...")
 
-        response = requests.get(f"{self.MEALIE_URL}/api/users/self", headers=self.HEADERS)
+        response = requests.get(f"{self.MEALIE_URL}/api/users/self", headers=self.HEADERS, verify=False)
 
         if response.status_code == 200:
             print(f"\nConnection established! Auth data validated! - Status Code: {response.status_code}")
