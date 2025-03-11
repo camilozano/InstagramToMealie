@@ -1,0 +1,105 @@
+# Project Rules and Patterns: Instagram To Mealie
+
+## Project Structure
+- Python-based web application
+- Flask + Waitress for web server
+- Helper modules for core functionality
+- Docker-based deployment
+
+## Code Patterns
+
+### Authentication Flow
+- Check for session file first
+- Fall back to credentials if needed
+- Validate environment variables on startup
+- Test Mealie connection early
+
+### Error Handling
+- Cleanup downloaded files after processing
+- Proper exception propagation
+- Clear error messages to users
+- Handle API timeouts gracefully
+
+### Integration Patterns
+1. Instagram
+   - Use session-based auth when possible
+   - Handle rate limits carefully
+   - Preserve metadata from posts
+
+2. Mealie
+   - Validate connection on startup
+   - Handle large media uploads
+   - Preserve Instagram tags
+
+## Working Directory
+- Base: /home/clozano/code/InstagramToMealie
+- Memory Bank: /home/clozano/code/InstagramToMealie/memory-bank
+
+## System Context
+- Running on Linux
+- Default shell: /bin/bash
+- Project requires Python environment
+
+## User Preferences
+1. Authentication
+   - Prefer session-based Instagram auth
+   - Session file path conventions
+   - API key management
+
+2. Configuration
+   - Environment variable based
+   - Docker-compose deployment
+   - Easy integration with Mealie
+
+3. Development
+   - Clear error messages
+   - Proper file cleanup
+   - Documentation maintenance
+
+## Critical Paths
+1. Instagram Post Processing
+   ```
+   URL Input -> Download -> Cache -> Process -> Upload -> Cleanup
+   ```
+
+2. Authentication Flow
+   ```
+   Check Session -> Try Credentials -> Validate -> Connect
+   ```
+
+3. Recipe Creation
+   ```
+   Get Post -> Extract Content -> Convert -> Create Recipe -> Add Media
+   ```
+
+## Known Challenges
+1. Instagram Limitations
+   - Rate limiting
+   - Authentication complexity
+   - Session management
+
+2. Media Handling
+   - Large file uploads
+   - Temporary storage
+   - Cleanup procedures
+
+3. Integration
+   - API timeouts
+   - Error recovery
+   - Concurrent requests
+
+## Tool Usage Patterns
+1. File Operations
+   - Use relative paths from working directory
+   - Handle cleanup in error cases
+   - Validate file existence
+
+2. Commands
+   - Execute from working directory
+   - Use explicit paths
+   - Handle environment setup
+
+3. Documentation
+   - Maintain memory bank
+   - Update progress tracking
+   - Document system patterns
